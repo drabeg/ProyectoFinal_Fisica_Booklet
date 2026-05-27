@@ -239,7 +239,7 @@ if seleccion == "Mediciones":
         st.success(f"Error porcentual calculado: {error:.2f}%")
         
     with col2:
-        st.subheader("📊 Comparación de Valores")
+        st.subheader("Comparación de Valores")
         fig, ax = plt.subplots(figsize=(5, 3.8))
         ax.bar(["Valor Real", "Valor Medido"], [valor_real, valor_medido], color=["#2ca02c", "#d62728"])
         ax.set_ylabel("Magnitud")
@@ -265,17 +265,19 @@ if seleccion == "Mediciones":
 elif seleccion == "Vectores":
     st.header("Vectores")
     
-    col1, col2 = st.columns([1, 1])
+    col1, col2 = st.columns([1, 1], vertical_alignment="top")
     with col1:
-        st.write("Los vectores son cantidades físicas que poseen magnitud, dirección y sentido.")
+        st.subheader("Fundamento Teórico")
+        st.write("Los vectores son cantidades físicas que poseen magnitud, dirección y sentido en un plano bidimensional.")
         st.latex(r"|\vec{v}| = \sqrt{x^2 + y^2}")
+        
         x = st.slider("Componente X", -10, 10, 5)
         y = st.slider("Componente Y", -10, 10, 4)
         magnitud = math.sqrt(x**2 + y**2)
         st.success(f"Magnitud del vector: {magnitud:.2f}")
         
     with col2:
-        st.subheader("📊 Plano Cartesiano")
+        st.subheader("Plano Cartesiano") 
         fig, ax = plt.subplots(figsize=(5, 5))
         ax.arrow(0, 0, x, y, head_width=0.4, head_length=0.6, length_includes_head=True, color="#1f77b4")
         ax.set_xlim(-12, 12)
@@ -310,7 +312,7 @@ elif seleccion == "Suma de vectores por método gráfico":
         st.success(f"Vector resultante: ({rx}, {ry})")
         
     with col2:
-        st.subheader("📊 Método Cabeza con Cola")
+        st.subheader("Método Cabeza con Cola")
         fig, ax = plt.subplots(figsize=(5, 5))
         ax.arrow(0, 0, ax1, ay1, head_width=0.5, length_includes_head=True, color="blue", label="Vector A")
         ax.arrow(ax1, ay1, bx1, by1, head_width=0.5, length_includes_head=True, color="green", label="Vector B")
@@ -326,8 +328,20 @@ elif seleccion == "Suma de vectores por método gráfico":
     st.markdown("---")
     mostrar_video("https://youtu.be/TWdLKBC_AgA?si=nYyrSBkGrSPe7dHR")
     ejercicio_slider(
-        "Ejercicio Suma Gráfica", "Seleccione la componente X correcta del vector resultante", -20, 20, 9,
-        "1. Sumamos las componentes en X:\nRx = 4 + 5\n\n2. Resultado:\nRx = 9\n\n3. En el método gráfico se colocan los vectores cabeza con cola para obtener la resultante."
+        "Ejercicio Suma Gráfica", 
+        "Seleccione la componente X correcta del vector resultante para los vectores A = (4, 3) y B = (5, 2)", 
+        -20, 20, 
+        9,
+        """
+1. Sumamos las componentes en X:
+Rx = Ax + Bx
+Rx = 4 + 5
+
+2. Resultado:
+Rx = 9
+
+3. En el método gráfico se colocan los vectores cabeza con cola para obtener la resultante.
+        """
     )
     ejercicio_opcion_multiple(
         "Ejercicio Magnitud Resultante", "¿Cuál es la magnitud aproximada del vector resultante R=(9,5)?",
@@ -341,11 +355,11 @@ elif seleccion == "Suma de vectores por método gráfico":
 elif seleccion == "Suma de vectores por método analítico":
     st.header("Suma de vectores por método analítico")
     
-    col1, col2 = st.columns([1, 1])
+    col1, col2 = st.columns([1, 1], vertical_alignment="center")
     with col1:
-        st.write("El método analítico consiste en sumar las componentes en X y Y de cada vector para encontrar el vector resultante.")
-        st.latex(r"R_x = A_x + B_x")
-        st.latex(r"R_y = A_y + B_y")
+        st.subheader("Análisis por Componentes")
+        st.write("Consiste en descomponer cada vector en sus ejes ortogonales para sumarlos de forma independiente.")
+        st.latex(r"R_x = A_x + B_x \quad | \quad R_y = A_y + B_y")
         st.latex(r"R = \sqrt{R_x^2 + R_y^2}")
         axv = st.number_input("A_x", value=4.0)
         ayv = st.number_input("A_y", value=3.0)
@@ -354,11 +368,9 @@ elif seleccion == "Suma de vectores por método analítico":
         rx = axv + bxv
         ry = ayv + byv
         magnitud = math.sqrt(rx**2 + ry**2)
-        st.success(f"Resultante: ({rx}, {ry})")
-        st.success(f"Magnitud de la resultante: {magnitud:.2f}")
+        st.success(f"Resultante: ({rx}, {ry}) | Magnitud: {magnitud:.2f}")
         
     with col2:
-        st.subheader("📊 Componentes desde el Origen")
         fig, ax = plt.subplots(figsize=(5, 5))
         ax.arrow(0, 0, axv, ayv, head_width=0.4, length_includes_head=True, color="blue", label="Vector A")
         ax.arrow(0, 0, bxv, byv, head_width=0.4, length_includes_head=True, color="green", label="Vector B")
@@ -397,7 +409,7 @@ elif seleccion == "MRU":
         st.success(f"Distancia recorrida: {distancia} m")
         
     with col2:
-        st.subheader("📊 Gráfica Distancia vs Tiempo")
+        st.subheader("Gráfica Distancia vs Tiempo")
         tiempo_x = np.linspace(0, tiempo, 100)
         distancia_y = velocidad * tiempo_x
         fig, ax = plt.subplots(figsize=(5, 3.5))
@@ -422,7 +434,7 @@ elif seleccion == "MRU":
 elif seleccion == "MRUV":
     st.header("Movimiento Rectilíneo Uniformemente Variado")
     
-    col1, col2 = st.columns([1, 1])
+    col1, col2 = st.columns([1, 1], vertical_alignment="center")
     with col1:
         st.write("Ocurre cuando un objeto se mueve en línea recta con una aceleración constante.")
         st.latex(r"v_f = v_i + at")
@@ -436,7 +448,6 @@ elif seleccion == "MRUV":
         st.success(f"Distancia recorrida: {d:.2f} m")
         
     with col2:
-        st.subheader("📊 Curva de Aceleración (Posición)")
         t_arr = np.linspace(0, t, 100)
         d_arr = vi * t_arr + 0.5 * a * (t_arr**2)
         fig, ax = plt.subplots(figsize=(5, 3.5))
@@ -479,7 +490,7 @@ elif seleccion == "Caída Libre":
         st.success(f"Altura recorrida: {altura:.2f} m")
         
     with col2:
-        st.subheader("📊 Desplazamiento de Caída")
+        st.subheader("Desplazamiento de Caída")
         t_arr = np.linspace(0, tiempo, 100)
         h_arr = altura - (0.5 * g * (t_arr**2))
         fig, ax = plt.subplots(figsize=(3, 4.5))
@@ -523,7 +534,7 @@ elif seleccion == "Tiro Vertical":
         st.success(f"Altura alcanzada: {h:.2f} m")
         
     with col2:
-        st.subheader("📊 Perfil de Altura vs Tiempo")
+        st.subheader("Perfil de Altura vs Tiempo")
         t_arr = np.linspace(0, tiempo, 100)
         h_arr = vi * t_arr - 0.5 * g * (t_arr**2)
         fig, ax = plt.subplots(figsize=(5, 3.5))
@@ -565,7 +576,7 @@ elif seleccion == "Movimiento semiparabólico":
         st.success(f"Alcance horizontal obtenido: {alcance:.2f} m")
         
     with col2:
-        st.subheader("📊 Mitad de Parábola")
+        st.subheader("Mitad de Parábola")
         t_arr = np.linspace(0, tiempo, 100)
         x_arr = velocidad * t_arr
         y_arr = altura - (0.5 * g * (t_arr**2))
@@ -595,71 +606,50 @@ elif seleccion == "Movimiento semiparabólico":
 # MOVIMIENTO DE PROYECTILES
 # --------------------------------------------------------
 
-elif seleccion == "Movimiento de Proyectiles":
-
+elif seleccion == "Movimiento de proyectiles":
     st.header("Movimiento de Proyectiles")
-
-    # Layout de dos columnas: Teoría a la izquierda, Gráfica a la derecha
-    col1, col2 = st.columns([1, 1])
-
+    
+    col1, col2 = st.columns([1, 1], vertical_alignment="center")
     with col1:
-        st.subheader("Concepto")
-        st.write(
-            "El movimiento de proyectiles combina un movimiento "
-            "horizontal uniforme (MRU) y un movimiento vertical "
-            "uniformemente acelerado (MRUV) debido a la acción de la gravedad."
-        )
-        st.write(
-            "La trayectoria que sigue el objeto tiene forma "
-            "parabólica debido a la aceleración constante de la gravedad."
-        )
-        st.latex(r"R = \frac{v^2 \sin(2\theta)}{g}")
+        st.subheader("Análisis Parabólico")
+        st.write("El movimiento de un proyectil es una combinación de movimiento horizontal con velocidad constante y movimiento vertical con aceleración constante.")
+        st.latex(r"x = (v_i \cos\theta)t")
+        st.latex(r"y = (v_i \sin\theta)t - \frac{1}{2}gt^2")
         
-        # Sliders para interactuar con la simulación
-        velocidad = st.slider("Velocidad inicial (m/s)", 1, 100, 40, key="v_proy")
-        angulo = st.slider("Ángulo de lanzamiento (°)", 1, 89, 45, key="ang_proy")
+        v0 = st.slider("Velocidad inicial (m/s)", 10, 50, 25)
+        angulo_grados = st.slider("Ángulo de lanzamiento (°)", 15, 90, 45)
         
-        gravedad = 9.8
-        theta = math.radians(angulo)
+        g = 9.8
+        ang_rad = math.radians(angulo_grados)
+        t_vuelo = (2 * v0 * math.sin(ang_rad)) / g
+        distancia_max = (v0**2 * math.sin(2 * ang_rad)) / g
         
-        # Cálculo del alcance máximo
-        alcance = (velocidad**2 * math.sin(2 * theta)) / gravedad
-        st.success(f"🚀 Alcance máximo calculado: {alcance:.2f} m")
-
+        st.success(f"Distancia máxima estimada: {distancia_max:.2f} m")
+        
     with col2:
-        st.subheader("📊 Trayectoria del Proyectil")
+        # Generación de la curva parabólica dinámica
+        t_pos = np.linspace(0, t_vuelo, 100)
+        x_pos = v0 * math.cos(ang_rad) * t_pos
+        y_pos = v0 * math.sin(ang_rad) * t_pos - 0.5 * g * (t_pos**2)
         
-        # Cálculo del tiempo de vuelo para generar los puntos de la curva
-        t_vuelo = (2 * velocidad * math.sin(theta)) / gravedad
-        t_vector = np.linspace(0, t_vuelo, 100)
-        
-        # Ecuaciones de posición en X y Y
-        x_pos = velocidad * math.cos(theta) * t_vector
-        y_pos = (velocidad * math.sin(theta) * t_vector) - (0.5 * gravedad * t_vector**2)
-        
-        # Renderizado del gráfico con Matplotlib
         fig, ax = plt.subplots(figsize=(5, 3.5))
-        ax.plot(x_pos, y_pos, color="#1f77b4", linewidth=2.5, label="Trayectoria")
-        ax.scatter(alcance, 0, color="red", s=60, zorder=5, label="Punto de Impacto")
-        
+        ax.plot(x_pos, y_pos, color="blue", linewidth=2, label="Trayectoria teórica")
         ax.set_xlabel("Distancia Horizontal (m)")
         ax.set_ylabel("Altura (m)")
-        ax.set_xlim(left=0)
         ax.set_ylim(bottom=0)
-        ax.grid(True, linestyle="--", alpha=0.6)
+        ax.grid(True, linestyle="--", alpha=0.5)
         ax.legend()
-        
         st.pyplot(fig)
         plt.close(fig)
 
     # Separador visual para los recursos adicionales y evaluación
     st.markdown("---")
     
-    st.subheader("🎬 Video de ejemplo")
+    st.subheader("Video de ejemplo")
     mostrar_video("https://youtu.be/lsStZ8xH4y4?si=_kahycp9XCW_HT61")
 
     st.markdown("---")
-    st.subheader("📝 Evaluación del Tema")
+    st.subheader("Evaluación del Tema")
 
     # AQUÍ ESTÁN TUS DOS EJERCICIOS ORIGINALES:
     
@@ -718,7 +708,7 @@ elif seleccion == "Movimiento circular":
         st.success(f"Aceleración centrípeta: {ac:.2f} m/s²")
         
     with col2:
-        st.subheader("📊 Órbita y Vectores Dinámicos")
+        st.subheader("Órbita y Vectores Dinámicos")
         ang_rad = np.linspace(0, 2*np.pi, 200)
         x_c = radio * np.cos(ang_rad)
         y_c = radio * np.sin(ang_rad)
@@ -762,7 +752,7 @@ elif seleccion == "Movimiento circular uniformemente variado":
         st.success(f"Desplazamiento angular: {theta:.2f} rad")
         
     with col2:
-        st.subheader("📊 Gráfica Velocidad Angular vs Tiempo")
+        st.subheader("Gráfica Velocidad Angular vs Tiempo")
         t_arr = np.linspace(0, tiempo, 100)
         w_arr = wi + alpha * t_arr
         fig, ax = plt.subplots(figsize=(5, 3.5))
@@ -777,8 +767,20 @@ elif seleccion == "Movimiento circular uniformemente variado":
     st.markdown("---")
     mostrar_video("https://youtu.be/VesfI_8ydpA?si=7adjiZ5EuX3wArgV")
     ejercicio_slider(
-        "Ejercicio MCUV", "Seleccione la velocidad angular final correcta", 0, 30, 15,
-        "1. Fórmula:\nωf = ωi + αt\n\n2. Sustituimos:\n5 + (2 × 5)\n\n3. Resultado:\n15 rad/s"
+        "Ejercicio MCUV", 
+        "Seleccione la velocidad angular final correcta para un cuerpo con ωi = 5 rad/s, α = 2 rad/s² y t = 5 s", 
+        0, 30, 
+        15,
+        """
+1. Fórmula:
+ωf = ωi + αt
+
+2. Sustituimos:
+ωf = 5 + (2 × 5)
+
+3. Resultado:
+ωf = 15 rad/s
+        """
     )
 
 # --------------------------------------------------------
@@ -793,7 +795,7 @@ elif seleccion == "Leyes de Newton":
         st.subheader("Resumen de los principios")
         st.info("• Primera Ley: Ley de la inercia.\n\n• Segunda Ley: Relación fuerza, masa y aceleración.\n\n• Tercera Ley: Acción y reacción.")
     with col2:
-        st.subheader("📌 Áreas de Aplicación")
+        st.subheader("Áreas de Aplicación")
         st.write("- Ingeniería Mecánica y Civil\n- Astronomía y Órbitas\n- Diseño Vehicular y Seguridad\n- Aeronáutica y Deportes")
         
     st.markdown("---")
@@ -831,7 +833,7 @@ elif seleccion == "Primera Ley":
             color_bloque = "orange"
             
     with col2:
-        st.subheader("📊 Diagrama de Inercia")
+        st.subheader("Diagrama de Inercia")
         fig, ax = plt.subplots(figsize=(4, 3))
         ax.text(0.5, 0.5, f"BLOQUE\n{estado_texto}", color="white", weight="bold", ha="center", va="center", bbox=dict(boxstyle="square,pad=1", fc=color_bloque))
         if fuerza > 0:
@@ -866,7 +868,7 @@ elif seleccion == "Segunda Ley":
         st.success(f"Fuerza resultante necesaria: {fuerza} N")
         
     with col2:
-        st.subheader("📊 Relación Dinámica")
+        st.subheader("Relación Dinámica")
         fig, ax = plt.subplots(figsize=(5, 3.5))
         ax.bar(["Masa (kg)", "Aceleración (m/s²)", "Fuerza (N)"], [masa, aceleracion, fuerza], color=["#1f77b4", "#ff7f0e", "#2ca02c"])
         ax.set_yscale("log") # Escala logarítmica para balancear las diferencias numéricas grandes
@@ -888,14 +890,15 @@ elif seleccion == "Segunda Ley":
 elif seleccion == "Tercera Ley":
     st.header("Tercera Ley de Newton")
     
-    col1, col2 = st.columns([1, 1])
+    col1, col2 = st.columns([1, 1], vertical_alignment="top")
     with col1:
-        st.write("Establece que a toda acción corresponde una reacción de igual magnitud pero en sentido opuesto.")
+        st.subheader("Acción y Reacción")
+        st.write("Establece que a toda fuerza de acción le corresponde una fuerza de reacción de igual magnitud pero dirección opuesta.")
         fuerza = st.slider("Fuerza de acción ejercida (N)", 1, 100, 20)
         st.success(f"Fuerza de reacción opuesta: {-fuerza} N")
         
     with col2:
-        st.subheader("📊 Vectores de Acción y Reacción")
+        st.subheader("Representación Vectorial") 
         fig, ax = plt.subplots(figsize=(5, 3))
         ax.arrow(0, 0, fuerza, 0, head_width=3, color="blue", length_includes_head=True, label="Acción")
         ax.arrow(0, 0, -fuerza, 0, head_width=3, color="red", length_includes_head=True, label="Reacción")
@@ -930,10 +933,10 @@ elif seleccion == "Aplicaciones de las Leyes de Newton":
         - **Dinámica automotriz:** Sistemas de frenado, fricción en curvas y bolsas de aire.
         """)
     with col2:
-        st.info("💡 **Dato Curioso de Ingeniería:** Sin el análisis vectorial de las aplicaciones de Newton, calcular la fricción necesaria en las curvas de las carreteras de Guatemala sería imposible, provocando derrapes continuos.")
+        st.info("**Dato Curioso de Ingeniería:** Sin el análisis vectorial de las aplicaciones de Newton, calcular la fricción necesaria en las curvas de las carreteras de Guatemala sería imposible, provocando derrapes continuos.")
 
     st.markdown("---")
-    mostrar_video("https://86ZNmoAdlNg?si=ILSGube9z924-kWr")
+    mostrar_video("https://youtu.be/_oxzQLp7ezk?si=E6Yp5L5bV8F9t1X2")
 
 # --------------------------------------------------------
 # TRABAJO
@@ -953,7 +956,7 @@ elif seleccion == "Trabajo":
         st.success(f"Trabajo neto realizado: {trabajo:.2f} J")
         
     with col2:
-        st.subheader("📊 Dirección de la Fuerza")
+        st.subheader("Dirección de la Fuerza")
         ang_rad = math.radians(angulo)
         fig, ax = plt.subplots(figsize=(4, 4))
         ax.arrow(0, 0, 1, 0, head_width=0.05, color="green", length_includes_head=True, label="Desplazamiento (d)")
@@ -989,7 +992,7 @@ elif seleccion == "Energía Cinética":
         st.success(f"Energía cinética calculada: {energia:.2f} J")
         
     with col2:
-        st.subheader("📊 Crecimiento Exponencial (v²)")
+        st.subheader("Crecimiento Exponencial (v²)")
         v_rango = np.linspace(0, 100, 100)
         e_rango = 0.5 * masa * (v_rango**2)
         fig, ax = plt.subplots(figsize=(5, 3.5))
@@ -1015,8 +1018,9 @@ elif seleccion == "Energía Cinética":
 elif seleccion == "Energía Potencial y Conservación":
     st.header("Energía Potencial y Conservación")
     
-    col1, col2 = st.columns([1, 1])
+    col1, col2 = st.columns([1, 1], vertical_alignment="top")
     with col1:
+        st.subheader("Energía de Posición")
         st.write("La energía potencial depende de la posición. En un sistema ideal sin fricción, la energía mecánica total se conserva.")
         st.latex(r"E_p = mgh")
         masa = st.slider("Masa (kg)", 1, 100, 10)
@@ -1025,7 +1029,7 @@ elif seleccion == "Energía Potencial y Conservación":
         st.success(f"Energía potencial calculada: {energia_p:.2f} J")
         
     with col2:
-        st.subheader("📊 Balance de Energía Mecánica")
+        st.subheader("Balance Mecánico") 
         fig, ax = plt.subplots(figsize=(4, 3.8))
         ax.bar(["E. Potencial", "E. Cinética (Mín)", "Energía Total"], [energia_p, 0, energia_p], color=["orange", "lightblue", "green"])
         ax.set_ylabel("Energía (J)")
@@ -1056,7 +1060,7 @@ elif seleccion == "Momentum Lineal":
         st.success(f"Momentum lineal: {momentum} kg·m/s")
         
     with col2:
-        st.subheader("📊 Comparación p = m × v")
+        st.subheader("Comparación p = m × v")
         fig, ax = plt.subplots(figsize=(5, 3.5))
         ax.bar(["Masa", "Velocidad", "Momentum"], [masa, velocidad, momentum], color=["purple", "teal", "magenta"])
         ax.set_yscale("log")
@@ -1089,7 +1093,7 @@ elif seleccion == "Choques":
         - **Perfectamente inelásticos:** Los cuerpos quedan completamente unidos tras el impacto.
         """)
     with col2:
-        st.subheader("📊 Conservación del Sistema")
+        st.subheader("Conservación del Sistema")
         fig, ax = plt.subplots(figsize=(4, 3.5))
         ax.bar(["Momentum Antes", "Momentum Después"], [100, 100], color=["#2ca02c", "#1f77b4"])
         ax.set_ylim(0, 140)

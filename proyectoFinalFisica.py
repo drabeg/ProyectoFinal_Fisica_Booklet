@@ -8,22 +8,58 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("BOOKLET EDUCATIVO INTERACTIVO - FÍSICA 1")
+# --------------------------------------------------------
+# PANTALLA INICIAL
+# --------------------------------------------------------
 
-st.markdown("""
-## Proyecto Digital de Física 1
+if "inicio" not in st.session_state:
+    st.session_state.inicio = True
 
-Este booklet incluye:
-- Conceptos
-- Fórmulas
-- Ejemplos
-- Videos educativos
+if st.session_state.inicio:
+
+    st.title("BOOKLET EDUCATIVO INTERACTIVO")
+    st.subheader("Física I")
+
+    st.image(
+        "imagenes/logo_umg.png",
+        width=250
+    )
+
+    st.markdown("""
+### Universidad Mariano Gálvez de Guatemala
+
+**Creado por:** Dario Alfredo Rabe Godoy  
+**Carnet:** 5190-25-23683  
+**Curso:** Física I
+
+---
+
+Este booklet interactivo contiene:
+
+- Conceptos fundamentales
+- Fórmulas físicas
 - Simulaciones interactivas
-- Ejercicios resueltos
+- Ejemplos resueltos
+- Videos educativos
+- Ejercicios interactivos
+
+---
+
+Seleccione un tema en el menú lateral para comenzar.
 """)
 
+    if st.button("Ingresar al booklet"):
+        st.session_state.inicio = False
+        st.rerun()
+
+    st.stop()
+
+# --------------------------------------------------------
+# SIDEBAR
+# --------------------------------------------------------
+
 st.sidebar.image(
-    "https://upload.wikimedia.org/wikipedia/commons/7/70/Logo_Universidad_Mariano_Galvez.png",
+    "imagenes/logo_umg.png",
     width=220
 )
 
@@ -40,12 +76,13 @@ TEMAS = [
     "Tiro Vertical",
     "Movimiento semiparabólico",
     "Movimiento de proyectiles",
+    "Movimiento circular",
+    "Movimiento circular uniformemente variado",
     "Leyes de Newton",
     "Primera Ley",
     "Segunda Ley",
     "Tercera Ley",
     "Aplicaciones de las Leyes de Newton",
-    "Movimiento circular",
     "Trabajo",
     "Energía Cinética",
     "Energía Potencial y Conservación",
@@ -53,26 +90,151 @@ TEMAS = [
     "Choques"
 ]
 
-seleccion = st.sidebar.radio("Selecciona un tema", TEMAS)
+seleccion = st.sidebar.radio(
+    "Selecciona un tema",
+    TEMAS
+)
 
+# --------------------------------------------------------
+# FUNCIONES
+# --------------------------------------------------------
 
 def mostrar_video(url):
     st.video(url)
 
 
-def ejercicio(titulo, pregunta, procedimiento, respuesta):
+def ejercicio_opcion_multiple(
+    titulo,
+    pregunta,
+    opciones,
+    correcta,
+    procedimiento
+):
+
     st.subheader(titulo)
 
-    st.write(pregunta)
+    respuesta = st.radio(
+        pregunta,
+        opciones,
+        key=titulo
+    )
 
-    boton_id = titulo.replace(" ", "_")
+    if st.button(
+        f"Verificar - {titulo}",
+        key=f"btn_{titulo}"
+    ):
 
-    if st.button(f"Mostrar solución - {titulo}", key=boton_id):
+        if respuesta == correcta:
+            st.success("Respuesta correcta")
+        else:
+            st.error(
+                f"Respuesta incorrecta. "
+                f"La correcta es: {correcta}"
+            )
+
         st.info("Procedimiento")
         st.write(procedimiento)
 
-        st.success(f"Respuesta final: {respuesta}")
 
+def ejercicio_numerico(
+    titulo,
+    pregunta,
+    correcta,
+    tolerancia,
+    procedimiento
+):
+
+    st.subheader(titulo)
+
+    respuesta = st.number_input(
+        pregunta,
+        value=0.0,
+        key=titulo
+    )
+
+    if st.button(
+        f"Comprobar - {titulo}",
+        key=f"btn_{titulo}"
+    ):
+
+        if abs(respuesta - correcta) <= tolerancia:
+            st.success("Resultado correcto")
+        else:
+            st.error(
+                f"Resultado incorrecto. "
+                f"Respuesta correcta: {correcta}"
+            )
+
+        st.info("Procedimiento")
+        st.write(procedimiento)
+
+
+def ejercicio_verdadero_falso(
+    titulo,
+    pregunta,
+    correcta,
+    procedimiento
+):
+
+    st.subheader(titulo)
+
+    respuesta = st.radio(
+        pregunta,
+        ["Verdadero", "Falso"],
+        key=titulo
+    )
+
+    if st.button(
+        f"Revisar - {titulo}",
+        key=f"btn_{titulo}"
+    ):
+
+        if respuesta == correcta:
+            st.success("Correcto")
+        else:
+            st.error(
+                f"Incorrecto. "
+                f"La respuesta correcta es: {correcta}"
+            )
+
+        st.info("Procedimiento")
+        st.write(procedimiento)
+
+
+def ejercicio_slider(
+    titulo,
+    pregunta,
+    minimo,
+    maximo,
+    correcta,
+    procedimiento
+):
+
+    st.subheader(titulo)
+
+    respuesta = st.slider(
+        pregunta,
+        minimo,
+        maximo,
+        minimo,
+        key=titulo
+    )
+
+    if st.button(
+        f"Validar - {titulo}",
+        key=f"btn_{titulo}"
+    ):
+
+        if respuesta == correcta:
+            st.success("Correcto")
+        else:
+            st.error(
+                f"Incorrecto. "
+                f"La respuesta correcta es: {correcta}"
+            )
+
+        st.info("Procedimiento")
+        st.write(procedimiento)
 
 # --------------------------------------------------------
 # MEDICIONES
@@ -82,21 +244,10 @@ if seleccion == "Mediciones":
 
     st.header("Mediciones")
 
-    st.subheader("Concepto")
-
     st.write(
-        "La medición es el proceso de comparar una magnitud física "
-        "con una unidad estándar."
+        "La medición es el proceso de comparar una magnitud "
+        "con una unidad de referencia."
     )
-
-    st.subheader("Esquema")
-
-    st.image(
-        "https://upload.wikimedia.org/wikipedia/commons/3/3a/Metric_system_explanation.svg",
-        width=500
-    )
-
-    st.subheader("Fórmula")
 
     st.latex(
         r"Error\ porcentual = \frac{|Valor\ real - Valor\ medido|}{Valor\ real} \times 100"
@@ -116,25 +267,34 @@ if seleccion == "Mediciones":
     st.success(f"Error porcentual: {error:.2f}%")
 
     mostrar_video(
-        "https://www.youtube.com/watch?v=JX7m2L7f7Ac"
+        "https://youtu.be/hXBBBTbqWPY"
     )
 
-    ejercicio(
+    ejercicio_opcion_multiple(
         "Ejercicio Mediciones",
+
         "Si el valor real es 100 cm y se mide 96 cm, ¿cuál es el error porcentual?",
+
+        [
+            "2%",
+            "4%",
+            "6%",
+            "8%"
+        ],
+
+        "4%",
+
         """
 1. Restamos:
 100 - 96 = 4
 
-2. Dividimos entre el valor real:
+2. Dividimos:
 4 / 100 = 0.04
 
 3. Multiplicamos por 100:
 0.04 × 100 = 4%
-        """,
-        "4%"
+        """
     )
-
 
 # --------------------------------------------------------
 # VECTORES
@@ -145,8 +305,7 @@ elif seleccion == "Vectores":
     st.header("Vectores")
 
     st.write(
-        "Los vectores son cantidades físicas que poseen "
-        "magnitud, dirección y sentido."
+        "Los vectores poseen magnitud, dirección y sentido."
     )
 
     st.latex(
@@ -154,7 +313,6 @@ elif seleccion == "Vectores":
     )
 
     x = st.slider("Componente X", -10, 10, 5)
-
     y = st.slider("Componente Y", -10, 10, 4)
 
     fig, ax = plt.subplots(figsize=(5, 5))
@@ -172,9 +330,9 @@ elif seleccion == "Vectores":
     ax.set_xlim(-12, 12)
     ax.set_ylim(-12, 12)
 
-    ax.set_aspect("equal")
-
     ax.grid(True)
+
+    ax.set_aspect("equal")
 
     st.pyplot(fig)
 
@@ -185,14 +343,20 @@ elif seleccion == "Vectores":
     st.success(f"Magnitud del vector: {magnitud:.2f}")
 
     mostrar_video(
-        "https://www.youtube.com/watch?v=4Wh22ynlLyk"
+        "https://youtu.be/IrTeyyzerjI"
     )
 
-    ejercicio(
+    ejercicio_numerico(
         "Ejercicio Vectores",
-        "Encuentra la magnitud del vector (6, 8).",
+
+        "Ingrese la magnitud del vector (6,8)",
+
+        10,
+
+        0.1,
+
         """
-1. Aplicamos la fórmula:
+1. Aplicamos:
 
 √(x² + y²)
 
@@ -200,117 +364,11 @@ elif seleccion == "Vectores":
 
 √(6² + 8²)
 
-3. Resolvemos:
+3. Resultado:
 
-√(36 + 64)
-
-4. Resultado:
-
-√100 = 10
-        """,
-        "10"
+10
+        """
     )
-
-
-# --------------------------------------------------------
-# SUMA GRÁFICA
-# --------------------------------------------------------
-
-elif seleccion == "Suma de vectores por método gráfico":
-
-    st.header("Suma de vectores por método gráfico")
-
-    st.write(
-        "Consiste en colocar vectores cabeza con cola "
-        "para encontrar la resultante."
-    )
-
-    ax1 = st.slider("Vector A - X", -10, 10, 4)
-    ay1 = st.slider("Vector A - Y", -10, 10, 3)
-
-    bx1 = st.slider("Vector B - X", -10, 10, 5)
-    by1 = st.slider("Vector B - Y", -10, 10, 2)
-
-    rx = ax1 + bx1
-    ry = ay1 + by1
-
-    fig, ax = plt.subplots(figsize=(6, 6))
-
-    ax.arrow(
-        0,
-        0,
-        ax1,
-        ay1,
-        head_width=0.4,
-        length_includes_head=True
-    )
-
-    ax.arrow(
-        ax1,
-        ay1,
-        bx1,
-        by1,
-        head_width=0.4,
-        length_includes_head=True
-    )
-
-    ax.arrow(
-        0,
-        0,
-        rx,
-        ry,
-        head_width=0.5,
-        length_includes_head=True
-    )
-
-    ax.set_xlim(-15, 15)
-    ax.set_ylim(-15, 15)
-
-    ax.set_aspect("equal")
-
-    ax.grid(True)
-
-    st.pyplot(fig)
-
-    plt.close(fig)
-
-    st.success(f"Vector resultante: ({rx}, {ry})")
-
-    mostrar_video(
-        "https://www.youtube.com/watch?v=8wQY7v1Zx7k"
-    )
-
-
-# --------------------------------------------------------
-# SUMA ANALÍTICA
-# --------------------------------------------------------
-
-elif seleccion == "Suma de vectores por método analítico":
-
-    st.header("Suma de vectores por método analítico")
-
-    st.latex(r"R_x = A_x + B_x")
-    st.latex(r"R_y = A_y + B_y")
-    st.latex(r"R = \sqrt{R_x^2 + R_y^2}")
-
-    axv = st.number_input("A_x", value=4.0)
-    ayv = st.number_input("A_y", value=3.0)
-
-    bxv = st.number_input("B_x", value=2.0)
-    byv = st.number_input("B_y", value=5.0)
-
-    rx = axv + bxv
-    ry = ayv + byv
-
-    magnitud = math.sqrt(rx**2 + ry**2)
-
-    st.success(f"Resultante: ({rx}, {ry})")
-    st.success(f"Magnitud: {magnitud:.2f}")
-
-    mostrar_video(
-        "https://www.youtube.com/watch?v=6A5mY0K0g0E"
-    )
-
 
 # --------------------------------------------------------
 # MRU
@@ -321,14 +379,24 @@ elif seleccion == "MRU":
     st.header("Movimiento Rectilíneo Uniforme")
 
     st.write(
-        "Es un movimiento donde la velocidad permanece constante."
+        "El MRU ocurre cuando la velocidad permanece constante."
     )
 
     st.latex(r"d = vt")
 
-    velocidad = st.slider("Velocidad (m/s)", 1, 50, 10)
+    velocidad = st.slider(
+        "Velocidad",
+        1,
+        50,
+        10
+    )
 
-    tiempo = st.slider("Tiempo (s)", 1, 20, 5)
+    tiempo = st.slider(
+        "Tiempo",
+        1,
+        20,
+        5
+    )
 
     distancia = velocidad * tiempo
 
@@ -340,7 +408,10 @@ elif seleccion == "MRU":
 
     fig, ax = plt.subplots()
 
-    ax.plot(tiempo_x, distancia_y)
+    ax.plot(
+        tiempo_x,
+        distancia_y
+    )
 
     ax.set_xlabel("Tiempo")
     ax.set_ylabel("Distancia")
@@ -352,201 +423,33 @@ elif seleccion == "MRU":
     plt.close(fig)
 
     mostrar_video(
-        "https://www.youtube.com/watch?v=G7Tn5jDsb8c"
+        "https://youtu.be/XE9UXxtep6M"
     )
 
-    ejercicio(
+    ejercicio_slider(
         "Ejercicio MRU",
-        "Un automóvil viaja a 20 m/s durante 10 s. ¿Qué distancia recorre?",
+
+        "Seleccione la distancia correcta recorrida por un automóvil que viaja a 20 m/s durante 10 s",
+
+        0,
+        500,
+
+        200,
+
         """
-1. Aplicamos la fórmula:
+1. Aplicamos:
 
 d = vt
 
 2. Sustituimos:
 
-d = 20 × 10
+20 × 10
 
 3. Resultado:
 
-d = 200 metros
-        """,
-        "200 metros"
+200 metros
+        """
     )
-
-
-# --------------------------------------------------------
-# MRUV
-# --------------------------------------------------------
-
-elif seleccion == "MRUV":
-
-    st.header("Movimiento Rectilíneo Uniformemente Variado")
-
-    st.latex(r"v_f = v_i + at")
-
-    st.latex(r"d = v_i t + \frac{1}{2}at^2")
-
-    vi = st.slider("Velocidad inicial", 0, 50, 10)
-
-    a = st.slider("Aceleración", -10, 20, 5)
-
-    t = st.slider("Tiempo", 1, 20, 5)
-
-    vf = vi + a * t
-
-    d = vi * t + 0.5 * a * (t**2)
-
-    st.success(f"Velocidad final: {vf} m/s")
-
-    st.success(f"Distancia recorrida: {d:.2f} m")
-
-    mostrar_video(
-        "https://www.youtube.com/watch?v=Qa_7f3nH8fY"
-    )
-
-
-# --------------------------------------------------------
-# CAÍDA LIBRE
-# --------------------------------------------------------
-
-elif seleccion == "Caída Libre":
-
-    st.header("Caída Libre")
-
-    st.latex(r"v = gt")
-
-    st.latex(r"h = \frac{1}{2}gt^2")
-
-    g = 9.8
-
-    tiempo = st.slider("Tiempo de caída", 1, 10, 3)
-
-    velocidad = g * tiempo
-
-    altura = 0.5 * g * (tiempo**2)
-
-    st.success(f"Velocidad: {velocidad:.2f} m/s")
-
-    st.success(f"Altura recorrida: {altura:.2f} m")
-
-    mostrar_video(
-        "https://www.youtube.com/watch?v=6A0Yw6Q6YNE"
-    )
-
-
-# --------------------------------------------------------
-# TIRO VERTICAL
-# --------------------------------------------------------
-
-elif seleccion == "Tiro Vertical":
-
-    st.header("Tiro Vertical")
-
-    st.latex(r"h = v_i t - \frac{1}{2}gt^2")
-
-    vi = st.slider("Velocidad inicial", 10, 100, 40)
-
-    tiempo = st.slider("Tiempo", 1, 10, 3)
-
-    h = vi * tiempo - 0.5 * 9.8 * (tiempo**2)
-
-    st.success(f"Altura alcanzada: {h:.2f} m")
-
-    mostrar_video(
-        "https://www.youtube.com/watch?v=WU8v7H8Vd1U"
-    )
-
-
-# --------------------------------------------------------
-# MOVIMIENTO SEMIPARABÓLICO
-# --------------------------------------------------------
-
-elif seleccion == "Movimiento semiparabólico":
-
-    st.header("Movimiento semiparabólico")
-
-    velocidad = st.slider(
-        "Velocidad horizontal",
-        1,
-        50,
-        20
-    )
-
-    altura = st.slider(
-        "Altura inicial",
-        1,
-        100,
-        20
-    )
-
-    tiempo = math.sqrt((2 * altura) / 9.8)
-
-    alcance = velocidad * tiempo
-
-    st.success(f"Tiempo de caída: {tiempo:.2f} s")
-
-    st.success(f"Alcance horizontal: {alcance:.2f} m")
-
-
-# --------------------------------------------------------
-# MOVIMIENTO DE PROYECTILES
-# --------------------------------------------------------
-
-elif seleccion == "Movimiento de proyectiles":
-
-    st.header("Movimiento de proyectiles")
-
-    st.latex(
-        r"R = \frac{v^2 \sin(2\theta)}{g}"
-    )
-
-    velocidad = st.slider(
-        "Velocidad inicial",
-        1,
-        100,
-        40
-    )
-
-    angulo = st.slider(
-        "Ángulo",
-        1,
-        89,
-        45
-    )
-
-    gravedad = 9.8
-
-    theta = math.radians(angulo)
-
-    alcance = (
-        velocidad**2 * math.sin(2 * theta)
-    ) / gravedad
-
-    st.success(f"Alcance máximo: {alcance:.2f} m")
-
-    mostrar_video(
-        "https://www.youtube.com/watch?v=ot5m3V6K8mY"
-    )
-
-
-# --------------------------------------------------------
-# LEYES DE NEWTON
-# --------------------------------------------------------
-
-elif seleccion == "Leyes de Newton":
-
-    st.header("Leyes de Newton")
-
-    st.write(
-        "Las leyes de Newton describen el movimiento "
-        "de los cuerpos y las fuerzas que actúan sobre ellos."
-    )
-
-    mostrar_video(
-        "https://www.youtube.com/watch?v=kKKM8Y-u7ds"
-    )
-
 
 # --------------------------------------------------------
 # PRIMERA LEY
@@ -557,10 +460,40 @@ elif seleccion == "Primera Ley":
     st.header("Primera Ley de Newton")
 
     st.write(
-        "Un cuerpo permanece en reposo o movimiento "
-        "rectilíneo uniforme si no actúa una fuerza neta."
+        "La primera ley establece que un cuerpo "
+        "mantendrá su estado de movimiento "
+        "si no actúa una fuerza neta."
     )
 
+    fuerza = st.slider(
+        "Fuerza aplicada",
+        0,
+        100,
+        0
+    )
+
+    if fuerza == 0:
+        st.success("El objeto permanece en reposo.")
+    else:
+        st.success("El objeto cambia su movimiento.")
+
+    mostrar_video(
+        "https://youtu.be/uUyAFlIdBqw"
+    )
+
+    ejercicio_verdadero_falso(
+        "Ejercicio Primera Ley",
+
+        "Un objeto permanecerá en reposo si no actúa una fuerza neta sobre él.",
+
+        "Verdadero",
+
+        """
+La primera ley de Newton indica que un objeto
+mantiene su estado de movimiento
+si no existe una fuerza neta externa.
+        """
+    )
 
 # --------------------------------------------------------
 # SEGUNDA LEY
@@ -572,7 +505,12 @@ elif seleccion == "Segunda Ley":
 
     st.latex(r"F = ma")
 
-    masa = st.slider("Masa", 1, 100, 10)
+    masa = st.slider(
+        "Masa",
+        1,
+        100,
+        10
+    )
 
     aceleracion = st.slider(
         "Aceleración",
@@ -585,135 +523,33 @@ elif seleccion == "Segunda Ley":
 
     st.success(f"Fuerza resultante: {fuerza} N")
 
-
-# --------------------------------------------------------
-# TERCERA LEY
-# --------------------------------------------------------
-
-elif seleccion == "Tercera Ley":
-
-    st.header("Tercera Ley de Newton")
-
-    st.write(
-        "A toda acción corresponde una reacción "
-        "de igual magnitud y sentido opuesto."
+    mostrar_video(
+        "https://youtu.be/RlXxqscdnYw"
     )
 
+    ejercicio_numerico(
+        "Ejercicio Segunda Ley",
 
-# --------------------------------------------------------
-# APLICACIONES
-# --------------------------------------------------------
+        "Calcule la fuerza para una masa de 10 kg y aceleración de 5 m/s²",
 
-elif seleccion == "Aplicaciones de las Leyes de Newton":
+        50,
 
-    st.header("Aplicaciones de las Leyes de Newton")
+        0.1,
 
-    st.write(
-        "Las leyes de Newton tienen aplicaciones "
-        "en ingeniería, deportes y vehículos."
+        """
+1. Fórmula:
+
+F = ma
+
+2. Sustituimos:
+
+10 × 5
+
+3. Resultado:
+
+50 N
+        """
     )
-
-
-# --------------------------------------------------------
-# MOVIMIENTO CIRCULAR
-# --------------------------------------------------------
-
-elif seleccion == "Movimiento circular":
-
-    st.header("Movimiento Circular")
-
-    st.latex(r"a_c = \frac{v^2}{r}")
-
-    velocidad = st.slider("Velocidad", 1, 50, 10)
-
-    radio = st.slider("Radio", 1, 20, 5)
-
-    ac = (velocidad**2) / radio
-
-    st.success(f"Aceleración centrípeta: {ac:.2f} m/s²")
-
-
-# --------------------------------------------------------
-# TRABAJO
-# --------------------------------------------------------
-
-elif seleccion == "Trabajo":
-
-    st.header("Trabajo")
-
-    st.latex(r"W = Fd \cos(\theta)")
-
-    fuerza = st.slider("Fuerza", 1, 100, 20)
-
-    distancia = st.slider("Distancia", 1, 50, 10)
-
-    angulo = st.slider("Ángulo", 0, 180, 0)
-
-    trabajo = (
-        fuerza
-        * distancia
-        * math.cos(math.radians(angulo))
-    )
-
-    st.success(f"Trabajo realizado: {trabajo:.2f} J")
-
-
-# --------------------------------------------------------
-# ENERGÍA CINÉTICA
-# --------------------------------------------------------
-
-elif seleccion == "Energía Cinética":
-
-    st.header("Energía Cinética")
-
-    st.latex(r"E_k = \frac{1}{2}mv^2")
-
-    masa = st.slider("Masa", 1, 100, 10)
-
-    velocidad = st.slider("Velocidad", 1, 100, 20)
-
-    energia = 0.5 * masa * (velocidad**2)
-
-    st.success(f"Energía cinética: {energia:.2f} J")
-
-
-# --------------------------------------------------------
-# ENERGÍA POTENCIAL
-# --------------------------------------------------------
-
-elif seleccion == "Energía Potencial y Conservación":
-
-    st.header("Energía Potencial y Conservación")
-
-    st.latex(r"E_p = mgh")
-
-    masa = st.slider("Masa", 1, 100, 10)
-
-    altura = st.slider("Altura", 1, 100, 20)
-
-    energia = masa * 9.8 * altura
-
-    st.success(f"Energía potencial: {energia:.2f} J")
-
-
-# --------------------------------------------------------
-# MOMENTUM
-# --------------------------------------------------------
-
-elif seleccion == "Momentum Lineal":
-
-    st.header("Momentum Lineal")
-
-    st.latex(r"p = mv")
-
-    masa = st.slider("Masa", 1, 100, 5)
-
-    velocidad = st.slider("Velocidad", 1, 100, 20)
-
-    momentum = masa * velocidad
-
-    st.success(f"Momentum lineal: {momentum} kg·m/s")
-
 
 # --------------------------------------------------------
 # CHOQUES
@@ -731,19 +567,29 @@ elif seleccion == "Choques":
         r"m_1v_1 + m_2v_2 = m_1v'_1 + m_2v'_2"
     )
 
-    ejercicio(
-        "Ejercicio Choques",
-        "Dos carros chocan y se conserva el momentum. Explica por qué.",
-        """
-1. Antes del choque existe una cantidad total de movimiento.
-
-2. Durante el choque las fuerzas internas se compensan.
-
-3. Por eso el momentum total se conserva.
-        """,
-        "El momentum total del sistema permanece constante."
+    mostrar_video(
+        "https://youtu.be/_zu67RXVuUM"
     )
 
+    ejercicio_opcion_multiple(
+        "Ejercicio Choques",
+
+        "¿Qué magnitud se conserva en un choque?",
+
+        [
+            "Temperatura",
+            "Momentum lineal",
+            "Color",
+            "Volumen"
+        ],
+
+        "Momentum lineal",
+
+        """
+En un sistema aislado,
+el momentum total permanece constante.
+        """
+    )
 
 # --------------------------------------------------------
 # FOOTER
